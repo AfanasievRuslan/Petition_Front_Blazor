@@ -1,0 +1,105 @@
+﻿<Collapse @ref="_mobileMenu">
+    @*outside click catcher*@
+    @*TODO: Fix this somehow*@
+    <div
+        class="position-fixed top-0 bottom-0 end-0 start-0"
+        style="background-color: #00000052; z-index:-1"
+        @onclick="() => _dropdown.HideAsync()">
+    </div>
+    <div style="@CustomStylesCss">
+        @*action tab*@
+        <div class="container d-flex justify-content-between px-3 text-white">
+            @{
+                if (HasMultilang)
+                {
+                    <div>
+                        <div class="d-flex" style="margin-bottom: -24px !important;">
+                            <div class="w-100 fs-4 py-1 hoverable clickable" @onclick="() => _dropdown.ShowAsync()">
+                                <i class="bi bi-globe2 center-icon"></i> @SelectedLanguage &#9662
+                            </div>
+                        </div>
+
+                        <Dropdown @ref="_dropdown" Size="DropdownSize.None" AutoClose="true">
+                            <DropdownMenu>
+                                <DropdownItem @onclick="@(() => ChangeLanguage(1))" Type="DropdownItemType.Link">Română</DropdownItem>
+                                <DropdownItem @onclick="@(() => ChangeLanguage(2))" Type="DropdownItemType.Link">English</DropdownItem>
+                                <DropdownItem @onclick="@(() => ChangeLanguage(3))" Type="DropdownItemType.Link">Руский</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
+                }
+
+                if (HasAuthentification)
+                {
+                    <div class="align-content-center mx-0 py-1 pointer-event user-select-none fs-4 hoverable clickable" @onclick="GoToLogin">
+                        <i class="bi bi-door-closed-fill"></i>
+                        Autentificare
+                    </div>
+                }
+            }
+        </div>
+
+        @*Navigation*@
+        <div class="bg-white fs-4">
+            <div class="container">
+                @NavButtons
+            </div>
+        </div>
+    </div>
+</Collapse>
+
+
+
+@code {
+    [Parameter] public bool HasAuthentification { get; set; }
+    [Parameter] public bool HasMultilang { get; set; }
+
+    [Parameter] public string? CustomStylesCss { get; set; }
+    [Parameter] public RenderFragment? NavButtons { get; set; }
+    
+    private Dictionary<int, string> _languageMap = null!;
+    private string SelectedLanguage { get; set; } = "Română";
+    
+    private Task GoToLogin()
+    {
+        //TODO: Figure out how to log user in
+        return Task.CompletedTask;
+    }
+    
+    private void ChangeLanguage(int languageKey)
+    {
+        SelectedLanguage = _languageMap[languageKey];
+        _dropdown.HideAsync();
+        /*TODO: handle culture */
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _languageMap = new()
+        {
+            {1, "Română"},
+            {2, "English"},
+            {3, "Руский"}
+        };
+
+        //TODO: Get culture for default language
+    }
+    
+    
+    /*Dropdown item*/
+    private Dropdown _dropdown = new();
+    private async Task ToggleDropdown()
+    {
+        await _dropdown.ToggleAsync();
+    }
+    
+    /*Collapsible item*/
+    private Collapse _mobileMenu = new();
+    [Parameter] public bool IsCollapsed { get; set; }
+    protected override void OnParametersSet()
+    {
+        _ = !IsCollapsed ? _mobileMenu.HideAsync() : _mobileMenu.ShowAsync();
+    }
+}

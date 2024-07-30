@@ -1,0 +1,78 @@
+﻿@*secondary header*@
+<div class="text-white py-1 fs-7" style="@CustomStylesCss">
+    <div class="container d-flex justify-content-between">
+        @*gov logo text*@
+        <div class="d-inline-flex align-items-center">
+            <div class="align-content-center">@ServiceName</div>
+            <img class="ms-1" src="@LogoUrl" height="25" width="25" alt="Guvernul Republicii Moldova" />
+            <div class="align-content-center mx-1">Guvernul Republicii Moldova</div>
+        </div>
+
+        @*nav options*@
+        <div class="d-none d-md-flex flex-row">
+            @{
+                if (HasMultilang)
+                {
+                    <div class="align-content-center mx-1 px-1 hoverable clickable">
+                        <Dropdown Color="DropdownColor.Secondary" Size="DropdownSize.Small">
+                            <DropdownToggleButton Style="border: 0; background-color: transparent;">@SelectedLanguage</DropdownToggleButton>
+                            <DropdownMenu>
+                                <DropdownItem @onclick="@(() => ChangeLanguage(1))" Type="DropdownItemType.Link">Română</DropdownItem>
+                                <DropdownItem @onclick="@(() => ChangeLanguage(2))" Type="DropdownItemType.Link">English</DropdownItem>
+                                <DropdownItem @onclick="@(() => ChangeLanguage(3))" Type="DropdownItemType.Link">Руский</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
+                }
+
+                if (HasAuthentification)
+                {
+                    <div role="button" class="align-content-center mx-1 px-1 pointer-event user-select-none hoverable clickable" @onclick="GoToLogin">
+                        <i class="bi bi-door-closed-fill"></i>
+                        Autentificare
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    /*required params*/
+    [Parameter] public required string ServiceName { get; set; }
+    [Parameter] public required string LogoUrl { get; set; }
+    [Parameter] public required string CustomStylesCss { get; set; }
+
+    /*options*/
+    [Parameter] public bool HasAuthentification { get; set; }
+    [Parameter] public bool HasMultilang { get; set; }
+
+    private Dictionary<int, string> _languageMap = null!;
+    private string SelectedLanguage { get; set; } = "Română";
+
+    private Task GoToLogin()
+    {
+        //TODO: Figure out how to log user in
+        return Task.CompletedTask;
+    }
+
+    private void ChangeLanguage(int languageKey)
+    {
+        SelectedLanguage = _languageMap[languageKey];
+        /*TODO: handle culture */
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _languageMap = new()
+        {
+            {1, "Română"},
+            {2, "English"},
+            {3, "Руский"}
+        };
+
+        //TODO: Get culture for default language
+    }
+}

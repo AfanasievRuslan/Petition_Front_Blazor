@@ -1,0 +1,61 @@
+﻿@*main header*@
+<div class="bg-white fs-6 py-2">
+    <div class="container d-flex justify-content-between h-100">
+        @*logo and title*@
+        <div class="d-flex flex-row">
+            @*logo*@
+            <a class="d-flex align-items-center h-100 hoverable clickable " href="@LogoHref">
+                <div class="d-flex mx-1">
+                    <img src="@LogoUrl" height="@LogoHeight" alt="@LogoAlt"/>
+                </div>
+            </a>
+            
+            @*title*@
+            <span class="d-none d-lg-block align-content-center mx-1">@MarkupLogoSubtext</span>
+        </div>
+
+        @*nav links*@
+        <div class="d-none d-md-flex flex-row">
+            @NavButtons
+        </div>
+        
+        @*mobile menu toggle*@@**@
+        <div class="d-block d-md-none align-content-center fs-1 px-2 hoverable clickable" @onclick="@ToggleMobileMenu">
+            <i class="bi bi-list"></i>
+        </div>
+        
+    </div>
+</div>
+
+@code {
+    /*Functional params*/
+    [Parameter] public required string LogoUrl { get; set; }
+    [Parameter] public required string LogoAlt { get; set; }
+    [Parameter] public string? LogoHeight { get; set; }
+    [Parameter] public required string LogoSubtext { get; set; }
+    [Parameter] public required string LogoHref { get; set; }
+    [Parameter] public RenderFragment? NavButtons { get; set; }
+    
+    [Parameter] public EventCallback OnMobileMenuToggle { get; set; }
+    
+    /*MarkupString can resolve html tags, for example <br/> to break line.*/
+    private MarkupString MarkupLogoSubtext { get; set; }
+    
+    protected override void OnInitialized()
+    {
+        /*Initialize logo subtext */
+        MarkupLogoSubtext = (MarkupString)LogoSubtext;
+        LogoHeight ??= "50";
+    }
+    
+    private void GoToLogin()
+    {
+        /*SHOULD BE THE SAME METHOD ON EACH PAGE*/
+        /*LOGIN USER HERE*/
+    }
+
+    private void ToggleMobileMenu()
+    {
+        OnMobileMenuToggle.InvokeAsync();
+    }
+}

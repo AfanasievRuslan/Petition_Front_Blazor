@@ -1,0 +1,24 @@
+.stick-to-top {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+.float {
+    z-index: 100;
+}
+
+.hide-dropdown-space {
+    margin-bottom: -24px !important;
+}
+
+.top-spacing-header {
+    margin-top: 6.3rem !important;
+    padding-top: 2rem;
+}
+
+.h-min-100 {
+    min-height: 100vh;
+}
+

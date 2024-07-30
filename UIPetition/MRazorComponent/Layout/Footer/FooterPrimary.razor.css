@@ -1,0 +1,20 @@
+﻿.bg-footer{
+    background-color: #3a444a;
+}
+
+.img-flatten-white{
+    filter: brightness(0) invert(1);
+}
+
+.text-footer-secondary{
+    color: #ffffff5e !important;
+    font-weight: 300;
+}
+
+.fw-thin{
+    font-weight: 200 !important;
+}
+
+.text-align-center{
+    text-align: center;
+}

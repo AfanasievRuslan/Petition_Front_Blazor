@@ -1,0 +1,29 @@
+﻿@inject NavigationManager Navigator
+
+<div class="d-flex align-items-center h-100 user-select-none hoverable clickable @Class" @onclick="async () => {Navigator.NavigateTo(Href); await InvokeOnClick();} ">
+    <div style="color: @IconColor">@_icon</div> @Text
+</div>
+
+@code{
+    [Parameter] public required string Text { get; set; }
+    [Parameter] public required string Href { get; set; }
+    
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public string? IconColor { get; set; }
+    [Parameter] public string? Class { get; set; }
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private async Task InvokeOnClick()
+    {
+        await OnClick.InvokeAsync();
+    }
+    
+    private MarkupString _icon;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _icon = Icon != string.Empty ? (MarkupString)Icon! : new MarkupString();
+    }
+}

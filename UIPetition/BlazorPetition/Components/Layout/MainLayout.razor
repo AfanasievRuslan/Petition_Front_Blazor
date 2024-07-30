@@ -1,0 +1,69 @@
+﻿@inherits LayoutComponentBase
+
+@code {
+    private bool _mobileToggle;
+
+    private Task ToggleMobileMenu()
+    {
+        _mobileToggle = !_mobileToggle;
+        return Task.CompletedTask;
+    }
+}
+<div class="container-fluid bg-body-secondary p-0">
+
+    <header class="float stick-to-top shadow-sm">
+        <HeaderSecondary ServiceName="MPetition"
+                         HasAuthentification="true"
+                         HasMultilang="true"
+                         LogoUrl="Images/Emblema_Guvernului_Republicii_Moldova.png"
+                         CustomStylesCss="background-image: linear-gradient(to right, #4D3B92, #CD445F)" />
+
+        <HeaderPrimary LogoUrl="Images/IMAGE.png"
+                       LogoAlt="MPetition"
+                       LogoHeight="50"
+                       LogoHref="/"
+                       LogoSubtext="Serviciul Guvernamental<br/> de petiții electronice"
+                       OnMobileMenuToggle="ToggleMobileMenu">
+
+            <NavButtons>
+                <NavButton Text="Asistență" Href="/" Class="px-3" />
+                <NavButton Text="Întrebări frecvente" Href="Counter" Class="px-3" />
+            </NavButtons>
+
+        </HeaderPrimary>
+
+        <MobileMenu IsCollapsed="_mobileToggle"
+                    HasAuthentification="true"
+                    HasMultilang="true"
+                    CustomStylesCss="background-image: linear-gradient(to right, #4D3B92, #CD445F)">
+            <NavButtons>
+                <NavButton Text="Asistență" Href="/" Class="py-2" OnClick="ToggleMobileMenu" Icon="<i class='bi bi-person-fill pe-2 fs-1'></i>" IconColor="#02639c" />
+                <NavButton Text="Întrebări frecvente" Href="Counter" OnClick="ToggleMobileMenu" Class="py-2" Icon="<i class='bi bi-question-lg pe-2 fs-1'></i>" IconColor="#02639c" />
+            </NavButtons>
+        </MobileMenu>
+    </header>
+
+    <main class="h-min-100 ">
+        <div class="container top-spacing-header">
+            @Body
+        </div>
+        <footer>
+            <FooterPrimary LogoUrl="Images/IMAGE.png"
+                           LogoHeight="35"
+                           LogoAlt="MPetition"
+                           ContactNumber="+373 609 55 516"
+                           NumberSubtext="ServivciuSuportClienți"
+                           CopyrightText="Agenția de Guvernare Electronică"
+                           RightGradientColor="#CD445F">
+                <Socials>
+                    <SocialLink Icon="<i class='d-flex bi bi-facebook'></i>" Diameter="50px" Class="mx-1" Href="https://www.facebook.com"></SocialLink>
+                    <SocialLink Icon="<i class='d-flex bi bi-twitter-x'></i>" Diameter="50px" Class="mx-1" Href="https://x.com/?lang=en"></SocialLink>
+                    <SocialLink Icon="<i class='d-flex bi bi-instagram'></i>" Diameter="50px" Class="mx-1" Href="https://www.instagram.com"></SocialLink>
+                    <SocialLink Icon="<i class='d-flex bi bi-youtube'></i>" Diameter="50px" Class="mx-1" Href="https://www.youtube.com/"></SocialLink>
+                    <SocialLink Icon="<i class='d-flex bi bi-telegram'></i>" Diameter="50px" Class="mx-1" Href="https://www.telegram.com/"></SocialLink>
+
+                </Socials>
+            </FooterPrimary>
+        </footer>
+    </main>
+</div>

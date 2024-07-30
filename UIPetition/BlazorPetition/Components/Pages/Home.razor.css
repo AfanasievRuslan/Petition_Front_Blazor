@@ -1,0 +1,80 @@
+﻿<h3 > Home </h3 >
+
+.clickable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.clickable:hover {
+    background-color: #cd4460 !important;
+    color: white !important;
+}
+
+.clickable:active {
+    background-color: #b34269 !important;
+    color: white !important;
+}
+
+
+.bg-custom {
+    background-color: #6a3d86 !important;
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+
+
+.img-fluid {
+    object-fit: cover; 
+    height: 100%;
+}
+
+.w-100 {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+.bg-custom {
+    background-color: #b34269; 
+}
+
+.text-center {
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.5rem; 
+    margin-bottom: 1rem; 
+}
+
+.description-text {
+    font-size: 1rem; 
+    line-height: 1.5; 
+}
+
+.objectives-list {
+    list-style: none;
+    padding: 0; 
+}
+
+    .objectives-list li {
+        font-size: 1rem; 
+        margin-bottom: 0.5rem; 
+    }
+
+.margin-top {
+    margin-top: 2rem; 
+}
+
+.objectives-list li {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+    @code {
+    }

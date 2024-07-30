@@ -1,0 +1,175 @@
+﻿<div>
+    @*Score card*@
+    <div class="card border-0 shadow-sm position-fixed z-1001 widget-right 
+        @(_isHiddenScoreCard ? "score-hidden" : "")
+        @(Alignment == WidgetAlignment.Middle ? "widget-middle" : "")
+        @(Alignment == WidgetAlignment.Bottom ? "widget-bottom" : "")
+        @(Alignment == WidgetAlignment.Top ? "widget-top" : "")">
+        <div class="card-body d-flex flex-column widget-padding" @onmouseover="ShowScoreCard" @onmouseleave="HideScoreCard">
+            @*average score circle*@
+            <div class="d-flex flex-row align-items-center user-select-none">
+                <div class="score-circle fs-5 @_score @(_isActiveScoreCard ? "full-score-view" : "")" style="border: 5px solid @_scoreColorValues.ElementAt(_score - 1)">
+                    @_score
+                    <span class="m-0 not-visible @(_isActiveScoreCard ? "visible" : "")">/5</span>
+                </div>
+                <div @onclick="ShowFeedbackCard" class="d-flex flex-row collapsed-feedback @(_isActiveScoreCard ? "opened-feedback" : "")">
+                    <span class="m-0 hoverable clickable d-flex align-items-center px-3 fs-5 ms-2 feedback-button text-nowrap">Lasă o recenzie</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Feedback input card*@
+    <div class="card border-0 shadow-sm position-fixed form-card z-1000 widget-hidden 
+        @(_isActiveFeedbackForm ? "highlight-shadow widget-visible" : "")
+        @(Alignment == WidgetAlignment.Middle ? "widget-middle" : "")
+        @(Alignment == WidgetAlignment.Bottom ? "widget-bottom" : "")
+        @(Alignment == WidgetAlignment.Top ? "widget-top" : "")">
+        <div class="card-body widget-padding">
+            <div class="d-flex flex-column justify-content-evenly ">
+                @*Before submit collapsed*@
+                <Collapse @ref="_collapsibleFeedbackArea" Toggle="true">
+                    @*question*@
+                    <div class="text-center widget-text">
+                        <span class="mb-3 text-gray"> Cum ați evalua experiența <br/> dumneavoastră?</span>
+                    </div>
+                    @*rating stars*@
+                    <div class="d-flex flex-row justify-content-evenly fs-4 mb-2">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            var score = i;
+                            <div @onclick="() => SelectScore(score)" class="circle background-color-transition @IsSelectedScore(i)" style="background-color: @AccentColor; ">
+                                <div class="score-checkmark text-white user-select-none hoverable clickable ">@i</div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <Collapse @ref="_collapsibleInput">
+                        <textarea @bind="_message" maxlength="1000" name="Message" spellcheck="false" class="w-100 border-0 round-border px-2 text-area" placeholder="Spune-ne mai multe..."></textarea>
+                    </Collapse>
+
+                    <div class="row justify-content-around">
+                        <div style="background: @AccentColor;" class="@(_userFeedbackScore!=0?"":"d-none") round-border col-5 p-0 ">
+                            <div @onclick="SubmitFeedback" class="py-1 text-center border-0 border-gray round-border text-white user-select-none border-gray hoverable clickable">Trimite</div>
+                        </div>
+                        <div @onclick="HideFeedbackCard" class="col-5 py-1 text-center border-gray round-border user-select-none hoverable clickable text-gray">Renunță</div>
+                    </div>
+                </Collapse>
+                
+                @*After submit message*@
+                <Collapse @ref="_collapsibleAfterFeedbackArea">
+                    <div class=" d-flex align-items-center justify-content-around" style="height: 86px">
+                        <i class="bi bi-check-circle-fill fs-1" style="color: @AccentColor"></i>
+                        <p class="m-0 text-gray text-center fw-300 fs-4">Vă mulțumim <br/> pentru recenzie</p>
+                    </div>
+                </Collapse> 
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /*TODO: get score subject and make calls from API with it for avg score and insert score under subject*/
+    [Parameter] public required string Subject { get; set; }
+    [Parameter] public required string Author { get; set; }
+    
+    /*Styles*/
+    [Parameter] public required WidgetAlignment Alignment { get; set; }
+    [Parameter] public required string AccentColor { get; set; }
+
+    private Feedback? _userFeedback;
+    private string? _message;
+    private bool _isSubmitted;
+    
+    /*User score*/
+    private int _userFeedbackScore=0;
+    
+    /*collapsible feedback message input*/
+    private Collapse _collapsibleInput = new();
+    private Collapse _collapsibleFeedbackArea = new();
+    private Collapse _collapsibleAfterFeedbackArea = new ();
+    
+    /*For testing*/
+    private Random _random = new(); //TO BE REMOVED
+    private int _score; //to be kept and initialized from API 
+    
+    private void SelectScore(int score)
+    {
+        _userFeedbackScore = score;
+        _collapsibleInput.ShowAsync();
+    }
+    private string IsSelectedScore(int scoreId)
+    {
+        if (_userFeedbackScore == 0) return "";
+        return _userFeedbackScore==scoreId? "":"not-selected";
+    }
+    
+    /*view feedback input*/
+    private bool _isActiveFeedbackForm;
+    private async Task ShowFeedbackCard()
+    {
+        _isActiveFeedbackForm = true;
+        _isHiddenScoreCard = true;
+
+        if (_isSubmitted)
+        {
+            await Task.Delay(3000);
+            HideFeedbackCard();
+        }
+    }
+    private void HideFeedbackCard()
+    {
+        /*Return to initial state*/
+        _collapsibleInput.HideAsync();
+        _userFeedbackScore = 0;
+        _isActiveFeedbackForm = false;
+        _isHiddenScoreCard = false;
+        _message = string.Empty;
+    }
+    
+    /*view extended score*/
+    private bool _isActiveScoreCard;
+    private bool _isHiddenScoreCard;
+    private void ShowScoreCard()
+    {
+        _isActiveScoreCard = true;
+    }
+    private void HideScoreCard()
+    {
+        _isActiveScoreCard = false;
+    }
+
+    private async Task SubmitFeedback()
+    {
+        //sanity check
+        if (_score == 0) return;
+        _userFeedback!.Score = _score;
+        _userFeedback.Message = _message;
+
+        await _collapsibleFeedbackArea.HideAsync();
+        await _collapsibleAfterFeedbackArea.ShowAsync();
+        _isSubmitted = true;
+        
+        await Task.Delay(3000);
+        
+        HideFeedbackCard();
+
+        //TODO: submit feedback to API
+    }
+    
+    private readonly IEnumerable<string> _scoreColorValues = ["#d50000", "#e16900", "#fcd002", "#98bc25", "#56ab42"];
+    
+    protected override void OnInitialized()
+    {
+        //TODO: get verify if user has already left feedback on subject.
+        //get from API, if()....
+        //_isSubmitted = ...
+        
+        _score = _random.Next(minValue: 1, maxValue: 6);
+        _userFeedback = new Feedback
+        {
+            Author = Author,
+            Subject = Subject
+        };
+    }
+}

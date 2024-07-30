@@ -1,0 +1,20 @@
+﻿<a class="fs-2 circle d-flex justify-content-center align-items-center @Class" href="@Href" style="width:@Diameter; height:@Diameter">
+    @_icon
+</a>
+
+@code {
+    //example: <i class='bi bi-house'></i>
+    [Parameter] public required string Icon { get; set; }
+    [Parameter] public required string Href { get; set; } 
+    [Parameter] public string? Class { get; set; }
+    
+    [Parameter] public required string Diameter { get; set; }
+    
+    private MarkupString _icon;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _icon = Icon != string.Empty ? (MarkupString)Icon! : new MarkupString();
+    }
+}
