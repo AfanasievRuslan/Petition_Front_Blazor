@@ -1,0 +1,160 @@
+@page "/MainPetitionForm"
+<EditForm EditContext="@editContext" OnValidSubmit="HandleOnValidSubmit" novalidate>
+    <DataAnnotationsValidator />
+    <div class="card bg-transparent border-0">
+
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-left align-items-left">
+                <span class="fs-5">Selectați tipul petiției</span>
+            </div>
+            <div class="col-4 mb-4">
+                <div class="card  border-0 shadow-sm p-0 card-content clickable hover-text">
+                    <div class="card-body text-center">
+
+                        <span class="fs-4 text-gradient ">
+                            <i class="bi bi-exclamation-circle"></i>
+                            Plângere
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 mb-4">
+                <div class="card mx-1 border-0 shadow-sm p-0 card-content clickable hover-text">
+                    <div class="card-body text-center">
+                        <span class="fs-4 text-gradient">
+                            <i class="bi bi-lightbulb"></i>
+                            Sugestie
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 mb-4">
+                <div class="card border-0 shadow-sm p-0 card-content clickable hover-text">
+                    <div class="card-body text-center">
+                        <span class="fs-4 text-gradient">
+                            <i class="bi bi-file-earmark-text"></i>
+                            Cerere
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 d-flex justify-content-left align-items-left">
+                <span class="fs-5">Selectati vizibilitatea petitiei</span>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card border-0 shadow-sm p-0 card-content">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input shadow-sm border-3" type="radio" name="visibility"
+                                id="flexRadioDefault" value="visible">
+                            <label class="form-check-label" for="flexRadioDefault">
+                                <b>Vizibil</b> (Informatia semantarilor va fi vizibila pentru toti utilizatorii)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input shadow-sm border-3" type="radio" name="visibility"
+                                id="flexRadioChecked" value="invisible" checked>
+                            <label class="form-check-label" for="flexRadioChecked">
+                                <b>Invizibil</b> (Informatia semnatarilor va fi vizibila doar pentru administratorul
+                                Serviciului)
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12">
+                <span class="fs-5">Selectați Serviciul sau #Tag-ul pentru petiția dvs</span>
+            </div>
+            <div class="col-12 mb-4 d-flex justify-content-center align-items-center">
+                <select class="form-select shadow-sm border-3" id="visibilitySelect">
+                    <option value="visible">Petition</option>
+                    <option value="visible">Feedback</option>
+                    <option value="invisible">News</option>
+                    <option value="invisible">Survey</option>
+                </select>
+            </div>
+            <div class="col-12 d-flex justify-content-left align-items-left">
+                <span class="fs-5">Selectați data limita</span>
+            </div>
+            <ValidationSummary />
+
+            <div class="col-12 form-group mb-4">
+                <DateInput TValue="DateOnly?" @bind-Value="invoice.InvoiceDate" />
+                <ValidationMessage For="@(() => invoice.InvoiceDate)" />
+            </div>
+            <div class="col-12 d-flex justify-content-left align-items-left">
+                <span class="fs-5">Adaugati titlul petitiei</span>
+            </div>
+            <div class="col-12 mb-4 d-flex justify-content-left align-items-left">
+                <input type="text" class="form-control" id="exampleInput" placeholder="Enter text here">
+            </div>
+            <div class="col-12 d-flex justify-content-left align-items-left">
+                <span class="fs-5">Selectati un template pentru petitie</span>
+            </div>
+            @for (int i = 0; i < 3; i++)
+            {
+                <div class="col-4">
+                    <div class="card mb-4 d-flex justify-content-center align-items-center">
+                        <div class="card-body">
+                            <p>Template @(i + 1)</p>
+                            <p>Nume_______, Prenume______, student UTM, facultatea_______, rog sa fie aprobata petitia
+                                nr______, cu privire la__________</p>
+                            <p>Subsemnatul_________.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="col-12 d-flex justify-content-left align-items-left">
+                <span class="fs-5">Adaugati continutul petitiei</span>
+            </div>
+            <div class="col-12 mb-4 d-flex justify-content-left align-items-left">
+                <textarea class="form-control" id="descriptionInput" rows="4"
+                    placeholder="Enter your description here"></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row my-3">
+
+        <div class="col-12 d-flex justify-content-end align-items-end">
+            <button type="submit" class="btn btn-primary mx-3">Save Draft</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Invoice invoice = new();
+    private EditContext? editContext;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(invoice);
+        base.OnInitialized();
+    }
+
+    public void HandleOnValidSubmit()
+    {
+        Console.WriteLine($"Invoice Date: {invoice.InvoiceDate}");
+    }
+
+    private void ResetForm()
+    {
+        invoice = new();
+        editContext = new EditContext(invoice);
+    }
+
+    public class Invoice
+    {
+        [Required(ErrorMessage = "Invoice Date required.")]
+        public DateOnly? InvoiceDate { get; set; }
+
+
+    }
+}
